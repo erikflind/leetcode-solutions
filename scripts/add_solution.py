@@ -21,10 +21,11 @@ PROBLEMS_DIR = Path(__file__).resolve().parent.parent / "problems"
 # PARSE AND HANDLE ARGUMENTS
 parser = argparse.ArgumentParser(
     description="Auto-generates directories & files and updates main README when adding new leetcode solution")
+#TODO: add list of supported languages to --help output
 
 # Add command line arguments
 parser.add_argument("number", type=int, help="leetcode problem number")
-parser.add_argument("url", help="URL to ")
+parser.add_argument("url", help="URL link to leetcode problem")
 parser.add_argument( "--languages", "--l", nargs="*", help="language source files to add - case insensitive")
 
 # Parse arguments
@@ -34,17 +35,22 @@ url:str = args.url.strip()
 languages: list[str] = [lang.strip().lower() for lang in args.languages or []]
 
 # Pre-compute supported language names before loop
-supported_lang_names = {name.lower() for name, _, _ in SUPPORTED_LANGUAGES}
+supported_lang_names = {name for name, _, _ in SUPPORTED_LANGUAGES}
 
 # Supported languages error handling
-for lang in languages:
-    if lang not in supported_lang_names:
-        print(f"Error! '{lang}' is currently not supported. Please try one of the supported languages:")
-        for supported_lang in SUPPORTED_LANGUAGES: print(f" >> {supported_lang[0]}")
-        exit(1)
+unsupported = [lang for lang in languages if lang not in {name.lower() for name in supported_lang_names}]
+if unsupported:
+    quoted_output = [f"'{lang}'" for lang in unsupported]
+    print(f"Error! Unsupported languages: {', '.join(quoted_output)}")
+    print(f"Please try one of: {', '.join(supported_lang_names)}")
+    exit(1)
 
 
 # EXTRACT RELEVANT INFO FROM URL
+# Normalize URL; ensure consistent scheme
+if not url.startswith(("http://", "https://")):
+    url = "https://" + url
+
 parsed_url = urlparse(url)
 
 # Extract parts of url path; drop the empty segments
@@ -54,7 +60,7 @@ path_parts = [p for p in parsed_url.path.split("/") if p]
 #   https://leetcode.com/problems/add-two-numbers/submissions/1814956175/
 #   --> https://leetcode.com/problems/add-two-numbers/ 
 try:
-    # The problem slug is immediately after "problems" in the url path
+    # The problem slug comes immediately after "problems" in the url path
     i = path_parts.index("problems")
     slug = path_parts[i + 1]
 except (ValueError, IndexError) as e:
