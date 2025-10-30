@@ -1,6 +1,5 @@
-import os
 import argparse
-from pathlib import Path #TODO: refactor path handling using pathlib
+from pathlib import Path
 from urllib.parse import urlparse
 from generate_readme import generate_readme, SUPPORTED_LANGUAGES
 
@@ -16,7 +15,8 @@ PROBLEM_README_TEMPLATE = """# Problem: {0}
 **Solution Approach:**
 - TODO: \<approach> ~ \<complexity> ~ \<language>"""
 
-PROBLEMS_ROOT = "./problems"
+PROBLEMS_DIR = Path(__file__).resolve().parent.parent / "problems"
+
 
 # PARSE AND HANDLE ARGUMENTS
 parser = argparse.ArgumentParser(
@@ -40,7 +40,7 @@ supported_lang_names = {name.lower() for name, _, _ in SUPPORTED_LANGUAGES}
 for lang in languages:
     if lang not in supported_lang_names:
         print(f"Error! '{lang}' is currently not supported. Please try one of the supported languages:")
-        for supp_lang in SUPPORTED_LANGUAGES: print(f" >> {supp_lang[0]}")
+        for supported_lang in SUPPORTED_LANGUAGES: print(f" >> {supported_lang[0]}")
         exit(1)
 
 
@@ -61,41 +61,41 @@ except (ValueError, IndexError) as e:
     raise ValueError("URL provided does not contain /problems/<slug>/") from e
 
 # Ensure url is in a short (canonical) format
-url = f"{parsed_url.scheme}://{parsed_url.netloc}/problems/{slug}"
+url = f"{parsed_url.scheme}://{parsed_url.netloc}/problems/{slug}/"
 
 # Derive title from slug
 title = slug.replace("-", " ").title()
 
 
 # CREATE DIRECTORIES & FILES
-folder_name: str = f"{number:04d}-{slug}"
-path: str = os.path.join(PROBLEMS_ROOT, folder_name)
-file_name = slug.replace("-", "_")
+folder_name = f"{number:04d}-{slug}"
+folder_path = PROBLEMS_DIR / folder_name
+source_file_name = slug.replace("-", "_")
 
-os.makedirs(path, exist_ok=True)
+folder_path.mkdir(parents=True, exist_ok=True)
 
 # Create problem README
 try:
-    with open(f"{path}/README.md", "x") as f:
+    with open(folder_path / "README.md", "x", encoding="utf-8") as f:
         f.write(PROBLEM_README_TEMPLATE.format(title, url))
 except FileExistsError:
-    print(f"README already exists at {path}, skipping...")
+    print(f"README already exists at {folder_path}, skipping...")
 
 # Create new program files with the appropriate extension
 # Throws an error if they already exist
 for lang in languages:
     # SUPPORTED_LANGUAGES is a list of tuples with (lang_name, lang_file_ext, lang_comment_style)
-    for supp_lang in SUPPORTED_LANGUAGES:
-        if lang == supp_lang[0].lower():
+    for supported_lang in SUPPORTED_LANGUAGES:
+        if lang == supported_lang[0].lower():
             # Unpack tuple to retrieve language: name, extension and single-line comment style
-            lang_name, lang_extension, lang_comment = supp_lang
+            lang_name, lang_extension, lang_comment = supported_lang
 
             try:
                 # Write source file with formatted header 
-                with open(f"{path}/{file_name}{lang_extension}", "x") as f:
+                with open(folder_path / (source_file_name + lang_extension), "x", encoding="utf-8") as f:
                     f.write(FILE_HEADER.format(lang_comment, url))
             except FileExistsError:
-                print(f"'{lang_name}' source file already exists at {path}, skipping...")
+                print(f"'{lang_name}' source file already exists at {folder_path}, skipping...")
 
 
 # Regenerate main README file

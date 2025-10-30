@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 
 MAIN_README_TEMPLATE = """# leetcode-solutions
@@ -20,15 +21,15 @@ SUPPORTED_LANGUAGES = [("Java",   ".java",  "//"),
                        ("C",      ".c",     "//"), 
                        ("Python", ".py",    "#")]
 
-PROBLEMS_ROOT = "./problems"
+PROBLEMS_DIR = Path(__file__).resolve().parent.parent / "problems"
 
 
 def generate_readme():
-    with open("README.md", "w") as f:
+    with open("README.md", "w", encoding="utf-8") as f:
         f.write(MAIN_README_TEMPLATE)
 
         # Add all of the contents table entries
-        with os.scandir(PROBLEMS_ROOT) as entries:
+        with os.scandir(PROBLEMS_DIR) as entries:
             # Ensure that the problem sub-directories are sorted
             for entry in sorted(entries, key=lambda e: e.name):
                 # Skip non-dir entries
@@ -39,7 +40,7 @@ def generate_readme():
                 title = " ".join(temp[1:]).title()
                 dir_name = entry.name
 
-                dir_path = os.path.join(PROBLEMS_ROOT, dir_name)
+                dir_path = PROBLEMS_DIR / dir_name
                 
                 # Prevent duplicates if there are more than one source file per a given language
                 languages = set()
