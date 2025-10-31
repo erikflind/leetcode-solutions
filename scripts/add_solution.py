@@ -1,7 +1,24 @@
+import os
 import argparse
 from pathlib import Path
 from urllib.parse import urlparse
 from generate_readme import generate_readme, SUPPORTED_LANGUAGES
+
+
+def dir_number_exists(number: int):
+    """
+    Returns boolean for whether problem folder with the given number exists.
+    """
+    with os.scandir(PROBLEMS_DIR) as entries:
+        for entry in entries:
+            if not entry.is_dir(): continue
+
+            dir_number = int(entry.name.split("-")[0])
+
+            if number == dir_number: return True
+            
+    return False
+
 
 # String templates / Constant variables
 FILE_HEADER = "{0} Problem:  {1}. {2}\n{0} Link:  {3}\n{0} Solution:  TODO: <approach> ~ <complexity>\n\n"
@@ -33,6 +50,11 @@ args = parser.parse_args()
 number: int = args.number
 url:str = args.url.strip()
 languages: list[str] = [lang.strip().lower() for lang in args.languages or []]
+
+# Check for number mismatch; problem folder already existing
+if dir_number_exists(number):
+    print(f"Error! Number mismatch/typo. Problem folder with number '{number:04d}' already exists.")
+    exit(1)
 
 # Pre-compute supported language names before loop
 supported_lang_names = {name for name, _, _ in SUPPORTED_LANGUAGES}
