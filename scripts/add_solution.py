@@ -4,11 +4,11 @@ from urllib.parse import urlparse
 from generate_readme import generate_readme, SUPPORTED_LANGUAGES
 
 # String templates / Constant variables
-FILE_HEADER = "{0} Problem: {1}\n{0} Solution: TODO: <approach> ~ <complexity>\n\n"
+FILE_HEADER = "{0} Problem:  {1}. {2}\n{0} Link:  {3}\n{0} Solution:  TODO: <approach> ~ <complexity>\n\n"
 
-PROBLEM_README_TEMPLATE = """# Problem: {0}
+PROBLEM_README_TEMPLATE = """# Problem: {0}. {1}
 
-**Link:** [{1}]({1})
+**Link:** [{2}]({2})
 
 **Summary:** TODO: \<description>
 
@@ -83,7 +83,7 @@ folder_path.mkdir(parents=True, exist_ok=True)
 # Create problem README
 try:
     with open(folder_path / "README.md", "x", encoding="utf-8") as f:
-        f.write(PROBLEM_README_TEMPLATE.format(title, url))
+        f.write(PROBLEM_README_TEMPLATE.format(number, title, url))
 except FileExistsError:
     print(f"README already exists at {folder_path}, skipping...")
 
@@ -99,7 +99,7 @@ for lang in languages:
             try:
                 # Write source file with formatted header 
                 with open(folder_path / (source_file_name + lang_extension), "x", encoding="utf-8") as f:
-                    f.write(FILE_HEADER.format(lang_comment, url))
+                    f.write(FILE_HEADER.format(lang_comment, number, title, url))
             except FileExistsError:
                 print(f"'{lang_name}' source file already exists at {folder_path}, skipping...")
 
