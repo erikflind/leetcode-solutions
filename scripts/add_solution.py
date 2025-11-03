@@ -1,6 +1,6 @@
 import os
 import argparse
-#from pathlib import Path
+from pathlib import Path
 from urllib.parse import urlparse
 from config import PROBLEMS_DIR, SUPPORTED_LANGUAGES
 from templates import SOURCE_FILE_HEADER, PROBLEM_README_TEMPLATE
@@ -30,7 +30,8 @@ parser = argparse.ArgumentParser(
 # Add command line arguments
 parser.add_argument("number", type=int, help="leetcode problem number")
 parser.add_argument("url", help="URL link to leetcode problem")
-parser.add_argument( "--language", "--l", nargs="*", help="programming language names of source files to add (case insensitive)")
+parser.add_argument( "--language", "--l", nargs="*", 
+                    help="programming language names of source files to add (case insensitive)")
 
 # Parse arguments
 args = parser.parse_args()
@@ -62,9 +63,8 @@ if unsupported:
 if not url.startswith(("http://", "https://")):
     url = "https://" + url
 
-parsed_url = urlparse(url)
-
 # Extract parts of url path; drop the empty segments
+parsed_url = urlparse(url)
 path_parts = [p for p in parsed_url.path.split("/") if p]
 
 # Strip url paths that are too long, for example:

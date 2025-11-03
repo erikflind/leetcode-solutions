@@ -1,5 +1,5 @@
 import os
-#from pathlib import Path
+from pathlib import Path
 from config import PROBLEMS_DIR, SUPPORTED_LANGUAGES
 from templates import MAIN_README_TEMPLATE, MAIN_README_TABLE_ENTRY
 
