@@ -15,7 +15,7 @@ Collection of my solutions to various leetcode problems.
 | # | Problem Title | Language(s) | Link |
 |:-:|---------------|-------------|------|"""
 
-README_ENTRY = "\n| {0} | {1} | {2} | [View](./problems/{3}) |"
+README_ENTRY = "\n| {number} | {title} | {languages} | [View](./problems/{dir_name}) |"
 
 SUPPORTED_LANGUAGES = [("Java",   ".java",  "//"), 
                        ("C",      ".c",     "//"), 
@@ -61,7 +61,7 @@ def generate_readme():
                 languages = sorted(languages)
 
                 # Write new entry to README contents table
-                f.write(README_ENTRY.format(number, title, ", ".join(languages), dir_name))
+                f.write(README_ENTRY.format(number=number, title=title, languages=", ".join(languages), dir_name=dir_name))
 
 
 if __name__ == "__main__":

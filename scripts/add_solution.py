@@ -21,11 +21,11 @@ def numbered_dir_exists(number: int):
 
 
 # String templates / Constant variables
-FILE_HEADER = "{0} Problem:  {1}. {2}\n{0} Link:  {3}\n{0} Solution:  TODO: <approach> ~ <complexity>\n\n"
+FILE_HEADER = "{prefix} Problem:  {number}. {title}\n{prefix} Link:  {url}\n{prefix} Solution:  TODO: <approach> ~ <complexity>\n\n"
 
-PROBLEM_README_TEMPLATE = """# Problem: {0}. {1}
+PROBLEM_README_TEMPLATE = """# Problem: {number}. {title}
 
-**Link:** [{2}]({2})
+**Link:** [{url}]({url})
 
 **Summary:** TODO: \<description>
 
@@ -56,6 +56,9 @@ if numbered_dir_exists(number):
     print("WARNING: Number mismatch/typo!")
     print(f"> Problem folder with the number '{number:04d}' already exists.")
     exit(1)
+
+# FIXME: now it's not possible to add additional source file types to an existing folder:
+# >> check slug to see if url and dir name match > prompt if want to add additional source file (y/n)
 
 # Pre-compute supported language names before loop
 supported_lang_names = {name for name, _, _ in SUPPORTED_LANGUAGES}
@@ -106,7 +109,7 @@ folder_path.mkdir(parents=True, exist_ok=True)
 # Create problem README
 try:
     with open(folder_path / "README.md", "x", encoding="utf-8") as f:
-        f.write(PROBLEM_README_TEMPLATE.format(number, title, url))
+        f.write(PROBLEM_README_TEMPLATE.format(number=number, title=title, url=url))
 except FileExistsError:
     print(f"Warning: README already exists at {folder_path}, skipping...")
 
@@ -122,7 +125,7 @@ for lang in languages:
             try:
                 # Write source file with formatted header 
                 with open(folder_path / (source_file_name + lang_extension), "x", encoding="utf-8") as f:
-                    f.write(FILE_HEADER.format(lang_comment, number, title, url))
+                    f.write(FILE_HEADER.format(prefix=lang_comment, number=number, title=title, url=url))
             except FileExistsError:
                 print(f"Warning: '{lang_name}' source file already exists at {folder_path}, skipping...")
 
