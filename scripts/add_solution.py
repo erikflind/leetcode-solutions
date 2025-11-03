@@ -26,6 +26,7 @@ def numbered_dir_exists(number: int):
 parser = argparse.ArgumentParser(
     description="Auto-generates directories & files and updates main README when adding new leetcode solution")
 #TODO: add list of supported languages to --help output
+#TODO: add --regen flag to simply regenerate main README 
 
 # Add command line arguments
 parser.add_argument("number", type=int, help="leetcode problem number")
@@ -111,4 +112,9 @@ for lang in languages:
 
 
 # Regenerate main README file
-generate_readme()
+try:
+    generate_readme()
+except Exception:
+    print("Warning! Something went wrong during main README generation.")
+    print("Please verify integrity of README file and/or rerun script with '--regen' flag to regenerate README.")
+    raise

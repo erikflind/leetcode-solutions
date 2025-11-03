@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
-from config import PROBLEMS_DIR, SUPPORTED_LANGUAGES
+from tempfile import NamedTemporaryFile
+from config import ROOT_DIR, PROBLEMS_DIR, SUPPORTED_LANGUAGES
 from templates import MAIN_README_TEMPLATE, MAIN_README_TABLE_ENTRY
 
 
@@ -9,42 +10,67 @@ EXT_TO_LANG = {ext: name for name, ext, _ in SUPPORTED_LANGUAGES.values()}
 
 
 def generate_readme():
-    with open("README.md", "w", encoding="utf-8") as f:
-        f.write(MAIN_README_TEMPLATE)
+    # Write to temp file before overwriting old README to avoid partial writes
+    temp_name = None    # initialize outside try block to avoid UnboundLocalError
+    try:
+        with NamedTemporaryFile("w", encoding="utf-8", dir=ROOT_DIR, delete=False) as temp:
+            temp_name = temp.name
 
-        # Add all of the contents table entries
-        with os.scandir(PROBLEMS_DIR) as entries:
-            # Ensure that the problem sub-directories are sorted
-            for entry in sorted(entries, key=lambda e: e.name):
-                # Skip non-dir entries
-                if not entry.is_dir(): continue
+            temp.write(MAIN_README_TEMPLATE)
 
-                temp = entry.name.split("-")
-                number = temp[0]
-                title = " ".join(temp[1:]).title()
-                dir_name = entry.name
+            # Write README contents table entries by checking the problems directory contents
+            with os.scandir(PROBLEMS_DIR) as dirs:
+                # Ensure that the problem sub-directories are sorted
+                for d in sorted(dirs, key=lambda e: e.name):
+                    # Skip non-dir entries
+                    if not d.is_dir(): continue
 
-                dir_path = PROBLEMS_DIR / dir_name
-                
-                # Prevent duplicates if there are more than one source file per a given language
-                languages = set()
-                
-                # Locate files within sub-directory; check file extensions
-                with os.scandir(dir_path) as files:
-                    for file in files:
-                        # Skip non-file entries
-                        if not file.is_file(): continue
+                    parts = d.name.split("-")
+                    number = parts[0]
+                    title = " ".join(parts[1:]).title()
+                    dir_name = d.name
 
-                        # Add language names to set based on the file extensions found
-                        _, file_ext = os.path.splitext(file.name)
-                        match = EXT_TO_LANG.get(file_ext)
-                        if match: languages.add(match)
+                    dir_path = PROBLEMS_DIR / dir_name
+                    
+                    # Prevent duplicates if there are more than one source file per a given language
+                    languages = set()
+                    
+                    # Locate files within sub-directory; check file extensions
+                    with os.scandir(dir_path) as files:
+                        for file in files:
+                            # Skip non-file entries
+                            if not file.is_file(): continue
 
-                # Sort the languages for consistency
-                languages = sorted(languages)
+                            # Add language names to set based on the file extensions found
+                            _, file_ext = os.path.splitext(file.name)
+                            match = EXT_TO_LANG.get(file_ext)
+                            if match: languages.add(match)
 
-                # Write new entry to README contents table
-                f.write(MAIN_README_TABLE_ENTRY.format(number=number, title=title, languages=", ".join(languages), dir_name=dir_name))
+                    # Sort the languages for consistency
+                    languages = sorted(languages)
+
+                    temp.write(MAIN_README_TABLE_ENTRY.format(number=number, title=title, languages=", ".join(languages), dir_name=dir_name))
+
+            temp.flush()    # write buffer to file
+            os.fsync(temp.fileno())     # ensure file content on disk
+
+        # replace original README (if it exists; otherwise simply renames temp file)
+        os.replace(temp_name, ROOT_DIR / "README.md")
+
+        # Ensure directory entry durability on POSIX systems
+        if os.name == "posix":
+            dir_fd = os.open(str(ROOT_DIR), os.O_DIRECTORY)
+            try:
+                os.fsync(dir_fd)
+            finally:
+                os.close(dir_fd)
+    
+    except Exception:
+        # Cleanup temp file if something failed before replace
+        if temp_name:
+            try: os.remove(temp_name)
+            except FileNotFoundError: pass
+        raise   # re-raise original exception after cleanup
 
 
 if __name__ == "__main__":
