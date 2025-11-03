@@ -1,7 +1,9 @@
 import os
+import sys
 import argparse
 from pathlib import Path
 from urllib.parse import urlparse
+
 from config import PROBLEMS_DIR, SUPPORTED_LANGUAGES
 from templates import SOURCE_FILE_HEADER, PROBLEM_README_TEMPLATE
 from generate_readme import generate_readme
@@ -21,21 +23,48 @@ def numbered_dir_exists(number: int):
             
     return False
 
+def wrapped_generate_readme():
+    try:
+        generate_readme()
+    except Exception:
+        print("Warning! Something went wrong during main README generation.")
+        print("Please verify integrity of README file and/or rerun script with '--regen' flag to regenerate README.")
+        raise
+
+
+# Names of the supported languages
+SUPPORTED_NAMES = {name for name, _, _ in SUPPORTED_LANGUAGES.values()}
 
 # PARSE AND HANDLE ARGUMENTS
 parser = argparse.ArgumentParser(
-    description="Auto-generates directories & files and updates main README when adding new leetcode solution")
-#TODO: add list of supported languages to --help output
-#TODO: add --regen flag to simply regenerate main README 
+    description="Purpose: Auto-generates directories & files and updates main README when adding new leetcode solution",
+    epilog=f"Supported languages: {', '.join(sorted(SUPPORTED_NAMES))}")
 
 # Add command line arguments
-parser.add_argument("number", type=int, help="leetcode problem number")
-parser.add_argument("url", help="URL link to leetcode problem")
-parser.add_argument( "--language", "--l", nargs="*", 
+parser.add_argument("number", type=int, nargs="?", help="leetcode problem number")
+parser.add_argument("url", nargs="?", help="URL link to leetcode problem")
+parser.add_argument("--language", "--l", nargs="*", 
                     help="programming language names of source files to add (case insensitive)")
+parser.add_argument("--regen", action="store_true", help="regenerate main README and exit")
 
 # Parse arguments
 args = parser.parse_args()
+
+# Short circuit for --regen flag
+if args.regen:
+    wrapped_generate_readme()
+    print("Main README successfully regenerated.")
+    sys.exit(0)
+
+# Validate non-optional arguments
+missing = []
+if args.number is None:
+    missing.append("'number'")
+if args.url is None:
+    missing.append("'url'")
+if missing:
+    parser.error(f"Missing arguments! {', '.join(missing)} required unless --regen flag is provided.")
+
 number: int = args.number
 url:str = args.url.strip()
 languages: list[str] = [lang.strip().lower() for lang in args.language or []]
@@ -44,19 +73,18 @@ languages: list[str] = [lang.strip().lower() for lang in args.language or []]
 if numbered_dir_exists(number):
     print("WARNING: Number mismatch/typo!")
     print(f"> Problem folder with the number '{number:04d}' already exists.")
-    exit(1)
+    sys.exit(1)
 
 # FIXME: now it's not possible to add additional source file types to an existing folder:
 # >> check slug to see if url and dir name match > prompt if want to add additional source file (y/n)
 
 # Supported languages error handling
-supported = {lang[0] for lang in SUPPORTED_LANGUAGES.values()}
-unsupported = [lang for lang in languages if lang not in {name.lower() for name in supported}]
+unsupported = [lang for lang in languages if lang not in {name.lower() for name in SUPPORTED_NAMES}]
 if unsupported:
     quoted_output = [f"'{lang}'" for lang in unsupported]
     print(f"Unsupported language(s): {', '.join(quoted_output)}")
-    print(f"Please try one of: {', '.join(sorted(supported))}")
-    exit(1)
+    print(f"Please try one of: {', '.join(sorted(SUPPORTED_NAMES))}")
+    sys.exit(1)
 
 
 # EXTRACT RELEVANT INFO FROM URL
@@ -112,9 +140,4 @@ for lang in languages:
 
 
 # Regenerate main README file
-try:
-    generate_readme()
-except Exception:
-    print("Warning! Something went wrong during main README generation.")
-    print("Please verify integrity of README file and/or rerun script with '--regen' flag to regenerate README.")
-    raise
+wrapped_generate_readme()
