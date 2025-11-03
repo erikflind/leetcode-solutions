@@ -60,15 +60,13 @@ if numbered_dir_exists(number):
 # FIXME: now it's not possible to add additional source file types to an existing folder:
 # >> check slug to see if url and dir name match > prompt if want to add additional source file (y/n)
 
-# Pre-compute supported language names before loop
-supported_lang_names = {name for name, _, _ in SUPPORTED_LANGUAGES}
-
 # Supported languages error handling
-unsupported = [lang for lang in languages if lang not in {name.lower() for name in supported_lang_names}]
+supported = {lang[0] for lang in SUPPORTED_LANGUAGES.values()}
+unsupported = [lang for lang in languages if lang not in {name.lower() for name in supported}]
 if unsupported:
     quoted_output = [f"'{lang}'" for lang in unsupported]
     print(f"Unsupported language(s): {', '.join(quoted_output)}")
-    print(f"Please try one of: {', '.join(supported_lang_names)}")
+    print(f"Please try one of: {', '.join(sorted(supported))}")
     exit(1)
 
 
@@ -111,23 +109,18 @@ try:
     with open(folder_path / "README.md", "x", encoding="utf-8") as f:
         f.write(PROBLEM_README_TEMPLATE.format(number=number, title=title, url=url))
 except FileExistsError:
-    print(f"Warning: README already exists at {folder_path}, skipping...")
+    print(f"Warning: README already exists at '{folder_path}', skipping...")
 
-# Create new program files with the appropriate extension
-# Throws an error if they already exist
+# Create new program file(s) with the appropriate extension(s)
+# Prompts a warning if the file already exist
 for lang in languages:
-    # SUPPORTED_LANGUAGES is a list of tuples with (lang_name, lang_file_ext, lang_comment_style)
-    for supported_lang in SUPPORTED_LANGUAGES:
-        if lang == supported_lang[0].lower():
-            # Unpack tuple to retrieve language: name, extension and single-line comment style
-            lang_name, lang_extension, lang_comment = supported_lang
-
-            try:
-                # Write source file with formatted header 
-                with open(folder_path / (source_file_name + lang_extension), "x", encoding="utf-8") as f:
-                    f.write(FILE_HEADER.format(prefix=lang_comment, number=number, title=title, url=url))
-            except FileExistsError:
-                print(f"Warning: '{lang_name}' source file already exists at {folder_path}, skipping...")
+    lang_name, extension, comment_style = SUPPORTED_LANGUAGES.get(lang)
+    try:
+        # Write source file with formatted header 
+        with open(folder_path / (source_file_name + extension), "x", encoding="utf-8") as f:
+            f.write(FILE_HEADER.format(prefix=comment_style, number=number, title=title, url=url))
+    except FileExistsError:
+        print(f"Warning: '{lang_name}' source file already exists at '{folder_path}', skipping...")
 
 
 # Regenerate main README file

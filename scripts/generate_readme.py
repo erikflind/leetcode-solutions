@@ -17,9 +17,13 @@ Collection of my solutions to various leetcode problems.
 
 README_ENTRY = "\n| {number} | {title} | {languages} | [View](./problems/{dir_name}) |"
 
-SUPPORTED_LANGUAGES = [("Java",   ".java",  "//"), 
-                       ("C",      ".c",     "//"), 
-                       ("Python", ".py",    "#")]
+SUPPORTED_LANGUAGES = {"java":   ("Java",   ".java",  "//"),
+                       "c":      ("C",      ".c",     "//"),
+                       "python": ("Python", ".py",    "#")}
+
+# Build language lookup (extension -> name)
+EXT_TO_LANG = {ext: name for name, ext, _ in SUPPORTED_LANGUAGES.values()}
+
 
 PROBLEMS_DIR = Path(__file__).resolve().parent.parent / "problems"
 
@@ -52,10 +56,9 @@ def generate_readme():
                         if not file.is_file(): continue
 
                         # Add language names to set based on the file extensions found
-                        # SUPPORTED_LANGUAGES is a list of tuples with (lang_name, lang_file_ext, lang_comment_style)
                         _, file_ext = os.path.splitext(file.name)
-                        temp = [language[0] for language in SUPPORTED_LANGUAGES if language[1] == file_ext]
-                        if temp: languages.add(*temp)
+                        match = EXT_TO_LANG.get(file_ext)
+                        if match: languages.add(match)
 
                 # Sort the languages for consistency
                 languages = sorted(languages)
