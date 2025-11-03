@@ -1,31 +1,11 @@
 import os
-from pathlib import Path
+#from pathlib import Path
+from config import PROBLEMS_DIR, SUPPORTED_LANGUAGES
+from templates import MAIN_README_TEMPLATE, MAIN_README_TABLE_ENTRY
 
-
-MAIN_README_TEMPLATE = """# leetcode-solutions
-Collection of my solutions to various leetcode problems.
-
-<!--TODO (maybe):  add statistics section with # of problems solved, which difficulty, etc.-->
-
-## Scripts
-- `add_solution-py`: automatically adds directories + files and invokes `generate_readme()`. Use flag "--help" for script usage.
-- `generate_readme.py`: generates new main README.md file with updated *Contents* table.
-
-## Contents
-| # | Problem Title | Language(s) | Link |
-|:-:|---------------|-------------|------|"""
-
-README_ENTRY = "\n| {number} | {title} | {languages} | [View](./problems/{dir_name}) |"
-
-SUPPORTED_LANGUAGES = {"java":   ("Java",   ".java",  "//"),
-                       "c":      ("C",      ".c",     "//"),
-                       "python": ("Python", ".py",    "#")}
 
 # Build language lookup (extension -> name)
 EXT_TO_LANG = {ext: name for name, ext, _ in SUPPORTED_LANGUAGES.values()}
-
-
-PROBLEMS_DIR = Path(__file__).resolve().parent.parent / "problems"
 
 
 def generate_readme():
@@ -64,7 +44,7 @@ def generate_readme():
                 languages = sorted(languages)
 
                 # Write new entry to README contents table
-                f.write(README_ENTRY.format(number=number, title=title, languages=", ".join(languages), dir_name=dir_name))
+                f.write(MAIN_README_TABLE_ENTRY.format(number=number, title=title, languages=", ".join(languages), dir_name=dir_name))
 
 
 if __name__ == "__main__":

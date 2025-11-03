@@ -1,8 +1,10 @@
 import os
 import argparse
-from pathlib import Path
+#from pathlib import Path
 from urllib.parse import urlparse
-from generate_readme import generate_readme, SUPPORTED_LANGUAGES
+from config import PROBLEMS_DIR, SUPPORTED_LANGUAGES
+from templates import SOURCE_FILE_HEADER, PROBLEM_README_TEMPLATE
+from generate_readme import generate_readme
 
 
 def numbered_dir_exists(number: int):
@@ -18,21 +20,6 @@ def numbered_dir_exists(number: int):
             if number == dir_number: return True
             
     return False
-
-
-# String templates / Constant variables
-FILE_HEADER = "{prefix} Problem:  {number}. {title}\n{prefix} Link:  {url}\n{prefix} Solution:  TODO: <approach> ~ <complexity>\n\n"
-
-PROBLEM_README_TEMPLATE = """# Problem: {number}. {title}
-
-**Link:** [{url}]({url})
-
-**Summary:** TODO: \<description>
-
-**Solution Approach:**
-- TODO: \<approach> ~ \<complexity> ~ \<language>"""
-
-PROBLEMS_DIR = Path(__file__).resolve().parent.parent / "problems"
 
 
 # PARSE AND HANDLE ARGUMENTS
@@ -118,7 +105,7 @@ for lang in languages:
     try:
         # Write source file with formatted header 
         with open(folder_path / (source_file_name + extension), "x", encoding="utf-8") as f:
-            f.write(FILE_HEADER.format(prefix=comment_style, number=number, title=title, url=url))
+            f.write(SOURCE_FILE_HEADER.format(prefix=comment_style, number=number, title=title, url=url))
     except FileExistsError:
         print(f"Warning: '{lang_name}' source file already exists at '{folder_path}', skipping...")
 
