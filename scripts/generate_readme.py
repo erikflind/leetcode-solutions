@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 from tempfile import NamedTemporaryFile
+
+# Modules
 from config import ROOT_DIR, PROBLEMS_DIR, SUPPORTED_LANGUAGES
 from templates import MAIN_README_TEMPLATE, MAIN_README_TABLE_ENTRY
 

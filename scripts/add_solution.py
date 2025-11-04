@@ -4,11 +4,13 @@ import argparse
 from pathlib import Path
 from urllib.parse import urlparse
 
+# Modules
 from generate_readme import generate_readme
 from config import PROBLEMS_DIR, SUPPORTED_LANGUAGES, PAD_WIDTH
 from templates import SOURCE_FILE_HEADER, PROBLEM_README_TEMPLATE
 
 
+# Helper functions
 def wrapped_generate_readme():
     try:
         generate_readme()
@@ -25,6 +27,42 @@ def confirm(prompt: str) -> bool:
         if answer in {"n", "no"}:
             return False
         print("Please input either 'y' or 'n'.")
+
+def parse_url(url: str) -> tuple[str, str, str]:
+    """
+    Normalize a LeetCode problem URL and extract its canonical form, slug, and title.
+
+    Handles missing schemes and extra path segments (e.g. `/submissions/`).
+
+    Returns a tuple (canonical_url, slug, title).
+
+    Raises ValueError if the URL lacks a `/problems/<slug>/` segment.
+    """
+    # Normalize URL; ensure consistent scheme
+    if not url.startswith(("http://", "https://")):
+        url = "https://" + url
+
+    # Extract parts of url path; drop the empty segments
+    parsed_url = urlparse(url)
+    path_parts = [p for p in parsed_url.path.split("/") if p]
+
+    # Strip url paths that are too long, for example:
+    #   https://leetcode.com/problems/add-two-numbers/submissions/1814956175/
+    #   --> https://leetcode.com/problems/add-two-numbers/ 
+    try:
+        # The problem slug comes immediately after "problems" in the url path
+        i = path_parts.index("problems")
+        slug = path_parts[i + 1]
+    except (ValueError, IndexError) as e:
+        raise ValueError("URL provided does not contain /problems/<slug>/") from e
+
+    # Ensure url is in a short (canonical) format
+    canonical_url = f"{parsed_url.scheme}://{parsed_url.netloc}/problems/{slug}/"
+
+    # Derive title from slug
+    title = slug.replace("-", " ").title()
+
+    return (canonical_url, slug, title)
 
 
 # Names of the supported languages
@@ -73,31 +111,8 @@ if unsupported:
     print(f"Please try one of: {', '.join(sorted(SUPPORTED_NAMES))}")
     sys.exit(1)
 
-
-# EXTRACT RELEVANT INFO FROM URL
-# Normalize URL; ensure consistent scheme
-if not url.startswith(("http://", "https://")):
-    url = "https://" + url
-
-# Extract parts of url path; drop the empty segments
-parsed_url = urlparse(url)
-path_parts = [p for p in parsed_url.path.split("/") if p]
-
-# Strip url paths that are too long, for example:
-#   https://leetcode.com/problems/add-two-numbers/submissions/1814956175/
-#   --> https://leetcode.com/problems/add-two-numbers/ 
-try:
-    # The problem slug comes immediately after "problems" in the url path
-    i = path_parts.index("problems")
-    slug = path_parts[i + 1]
-except (ValueError, IndexError) as e:
-    raise ValueError("URL provided does not contain /problems/<slug>/") from e
-
-# Ensure url is in a short (canonical) format
-url = f"{parsed_url.scheme}://{parsed_url.netloc}/problems/{slug}/"
-
-# Derive title from slug
-title = slug.replace("-", " ").title()
+# Extract relevant info from URL
+url, slug, title = parse_url(url)
 
 # Target directory
 target_dir = PROBLEMS_DIR / f"{padded}-{slug}"
