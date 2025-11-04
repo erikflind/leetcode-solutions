@@ -7,3 +7,5 @@ PROBLEMS_DIR = ROOT_DIR / "problems"
 SUPPORTED_LANGUAGES = {"java":   ("Java",   ".java",  "//"),
                        "c":      ("C",      ".c",     "//"),
                        "python": ("Python", ".py",    "#")}
+
+PAD_WIDTH = 4   # related to number of existing leetcode problems (4-digit number as of writing)

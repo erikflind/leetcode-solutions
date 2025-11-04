@@ -43,7 +43,7 @@ def generate_readme():
 
                             # Add language names to set based on the file extensions found
                             _, file_ext = os.path.splitext(file.name)
-                            match = EXT_TO_LANG.get(file_ext)
+                            match = EXT_TO_LANG.get(file_ext.lower())
                             if match: languages.add(match)
 
                     # Sort the languages for consistency
