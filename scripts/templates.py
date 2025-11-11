@@ -15,21 +15,23 @@ Collection of my solutions to various leetcode problems.
 | # | Problem Title | Language(s) | Link |
 |:-:|---------------|-------------|------|"""
 
+
 MAIN_README_TABLE_ENTRY = "\n| {number} | {title} | {languages} | [View](./problems/{dir_name}) |"
 
 
 
 ### Problem directory templates ###
 
-SOURCE_FILE_HEADER = """{prefix} Problem:  {number}. {title}
-{prefix} Link:  {url}
-{prefix} Solution:  TODO: <approach> ~ <complexity>\n\n"""
-
 PROBLEM_README_TEMPLATE = """# Problem: {number}. {title}
 
 **Link:** [{url}]({url})
 
-**Summary:** TODO: \<description>
+**Summary:**  \<description> [TODO]
 
 **Solution Approach:**
-- TODO: \<approach> ~ \<complexity> ~ \<language>"""
+- \<approach> ~ \<complexity> ~ \<language> [TODO]"""
+
+
+SOURCE_FILE_HEADER = """{prefix} Problem:  {number}. {title}
+{prefix} Solution:  <approach> ~ <complexity> [TODO]
+{prefix} Link:  {url}\n\n"""
