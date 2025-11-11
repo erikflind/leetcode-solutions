@@ -22,6 +22,7 @@ def wrapped_generate_readme():
         print("Please verify integrity of README file and/or rerun script with '--regen' flag to regenerate README.")
         raise
 
+
 def confirm(prompt: str) -> bool:
     """Prompt until user enters y/n."""
     while True:
@@ -31,6 +32,7 @@ def confirm(prompt: str) -> bool:
         if answer in {"n", "no"}:
             return False
         print("Please input either 'y' or 'n'.")
+
 
 def parse_url(url: str) -> tuple[str, str, str]:
     """
@@ -52,7 +54,7 @@ def parse_url(url: str) -> tuple[str, str, str]:
 
     # Strip url paths that are too long, for example:
     #   https://leetcode.com/problems/add-two-numbers/submissions/1814956175/
-    #   --> https://leetcode.com/problems/add-two-numbers/ 
+    #   --> https://leetcode.com/problems/add-two-numbers/
     try:
         # The problem slug comes immediately after "problems" in the url path
         i = path_parts.index("problems")
@@ -69,20 +71,26 @@ def parse_url(url: str) -> tuple[str, str, str]:
     return (canonical_url, slug, title)
 
 
-
 # Build set of the supported languages names
 SUPPORTED_NAMES = sorted([name for name, _, _ in SUPPORTED_LANGUAGES.values()])
 
 # Create new parser; add command line arguments
 parser = argparse.ArgumentParser(
     description="Purpose: Auto-generates directories & template files and updates main README when adding new leetcode solution.",
-    epilog=f"Supported languages: {', '.join(SUPPORTED_NAMES)}")
+    epilog=f"Supported languages: {', '.join(SUPPORTED_NAMES)}",
+)
 
 parser.add_argument("number", type=int, nargs="?", help="leetcode problem number")
 parser.add_argument("url", nargs="?", help="URL link to leetcode problem")
-parser.add_argument("--language", "--l", nargs="*", 
-                    help="list of programming language names of source files to add (case insensitive)")
-parser.add_argument("--regen", action="store_true", help="regenerate main README and exit")
+parser.add_argument(
+    "--language",
+    "--l",
+    nargs="*",
+    help="list of programming language names of source files to add (case insensitive)",
+)
+parser.add_argument(
+    "--regen", action="store_true", help="regenerate main README and exit"
+)
 
 
 # Parse arguments
@@ -101,15 +109,19 @@ if args.number is None:
 if args.url is None:
     missing.append("'url'")
 if missing:
-    parser.error(f"Missing arguments! {', '.join(missing)} required unless --regen flag is provided.")
+    parser.error(
+        f"Missing arguments! {', '.join(missing)} required unless --regen flag is provided."
+    )
 
 number: int = args.number
 padded = f"{number:0{PAD_WIDTH}d}"
-url:str = args.url.strip()
+url: str = args.url.strip()
 languages: list[str] = [lang.strip().lower() for lang in args.language or []]
 
 # Validate input languages; handle unsupported
-unsupported = [lang for lang in languages if lang not in {name.lower() for name in SUPPORTED_NAMES}]
+unsupported = [
+    lang for lang in languages if lang not in {name.lower() for name in SUPPORTED_NAMES}
+]
 if unsupported:
     quoted_output = [f"'{lang}'" for lang in unsupported]
     print(f"Unsupported language(s): {', '.join(quoted_output)}")
@@ -126,12 +138,13 @@ target_dir_path = PROBLEMS_DIR / target_dir_name
 # Exact directory already exists; prompt user to confirm before proceeding
 append_to_existing = False
 if target_dir_path.is_dir():
-    if confirm(f"Problem folder '{target_dir_name}' already exists. Add additional source files?"):
+    prompt = f"Problem folder '{target_dir_name}' already exists. Add additional source files?"
+    if confirm(prompt):
         append_to_existing = True
     else:
         sys.exit(0)
 
-# Check for collisions with directories that use the same number but have different slugs 
+# Check for collisions with directories that use the same number but have different slugs
 if not append_to_existing:
     collisions = [d for d in PROBLEMS_DIR.glob(f"{padded}-*") if d.is_dir()]
     if collisions:
@@ -158,10 +171,18 @@ source_file_name = slug.replace("-", "_")
 for lang in languages:
     lang_name, extension, comment_style = SUPPORTED_LANGUAGES.get(lang)
     try:
-        with open(target_dir_path / (source_file_name + extension), "x", encoding="utf-8") as f:
-            f.write(SOURCE_FILE_HEADER.format(prefix=comment_style, number=number, title=title, url=url))
+        with open(
+            target_dir_path / (source_file_name + extension), "x", encoding="utf-8"
+        ) as f:
+            f.write(
+                SOURCE_FILE_HEADER.format(
+                    prefix=comment_style, number=number, title=title, url=url
+                )
+            )
     except FileExistsError:
-        print(f"Warning: '{lang_name}' source file already exists at '{target_dir_name}', skipping...")
+        print(
+            f"Warning: '{lang_name}' source file already exists at '{target_dir_name}', skipping..."
+        )
 
 
 # Regenerate main README file
