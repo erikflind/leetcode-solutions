@@ -12,4 +12,5 @@ Collection of my solutions to various leetcode problems.
 ## Contents
 | # | Problem Title | Language(s) | Link |
 |:-:|---------------|-------------|------|
+| 0001 | Two Sum | Java | [View](./problems/0001-two-sum) |
 | 0002 | Add Two Numbers | Java | [View](./problems/0002-add-two-numbers) |
