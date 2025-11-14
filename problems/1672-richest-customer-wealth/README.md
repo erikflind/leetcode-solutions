@@ -2,7 +2,7 @@
 
 **Link:** [https://leetcode.com/problems/richest-customer-wealth/](https://leetcode.com/problems/richest-customer-wealth/)
 
-**Summary:**  \<description> [TODO]
+**Summary:**  Given a `m * n` 2D integer array `accounts[i][j]`, return the wealth of the richest customer `i` based on the total money in their bank accounts `j`.
 
 **Solution Approach:**
-- \<approach> ~ \<complexity> ~ \<language> [TODO]
+- iterative ~ O(m*n) ~ Java

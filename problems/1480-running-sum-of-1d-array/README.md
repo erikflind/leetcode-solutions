@@ -2,7 +2,7 @@
 
 **Link:** [https://leetcode.com/problems/running-sum-of-1d-array/](https://leetcode.com/problems/running-sum-of-1d-array/)
 
-**Summary:**  \<description> [TODO]
+**Summary:**  Return the running sum of an array of integers, defined as: `runningSum[i] = sum(nums[0]…nums[i])`
 
 **Solution Approach:**
-- \<approach> ~ \<complexity> ~ \<language> [TODO]
+- iterative ~ O(n) ~ Java
