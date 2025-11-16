@@ -6,3 +6,4 @@
 
 **Solution Approach:**
 - iterative ~ O(n) ~ C
+- one-liner ~ O(n) ~ Python

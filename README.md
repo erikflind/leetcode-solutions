@@ -14,6 +14,6 @@ Collection of my solutions to various leetcode problems.
 |:-:|---------------|-------------|------|
 | 0001 | Two Sum | Java | [View](./problems/0001-two-sum) |
 | 0002 | Add Two Numbers | Java | [View](./problems/0002-add-two-numbers) |
-| 0412 | Fizz Buzz | C | [View](./problems/0412-fizz-buzz) |
+| 0412 | Fizz Buzz | C, Python | [View](./problems/0412-fizz-buzz) |
 | 1480 | Running Sum Of 1D Array | Java | [View](./problems/1480-running-sum-of-1d-array) |
 | 1672 | Richest Customer Wealth | Java | [View](./problems/1672-richest-customer-wealth) |
