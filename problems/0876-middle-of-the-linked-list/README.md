@@ -6,3 +6,4 @@
 
 **Solution Approach:**
 - double pointers ~ O(n) ~ Java
+- double pointers ~ O(n) ~ C
