@@ -14,6 +14,7 @@ Collection of my solutions to various leetcode problems.
 |:-:|---------------|-------------|------|
 | 0001 | Two Sum | Java | [View](./problems/0001-two-sum) |
 | 0002 | Add Two Numbers | Java | [View](./problems/0002-add-two-numbers) |
+| 0383 | Ransom Note | C, Java | [View](./problems/0383-ransom-note) |
 | 0412 | Fizz Buzz | C, Python | [View](./problems/0412-fizz-buzz) |
 | 0876 | Middle Of The Linked List | C, Java | [View](./problems/0876-middle-of-the-linked-list) |
 | 1342 | Number Of Steps To Reduce A Number To Zero | C | [View](./problems/1342-number-of-steps-to-reduce-a-number-to-zero) |
