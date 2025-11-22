@@ -15,3 +15,4 @@ Collection of my solutions to various leetcode problems.
 | 1480 | Running Sum Of 1D Array | Java | [View](./problems/1480-running-sum-of-1d-array) |
 | 1672 | Richest Customer Wealth | Java | [View](./problems/1672-richest-customer-wealth) |
 | 2095 | Delete The Middle Node Of A Linked List | Java | [View](./problems/2095-delete-the-middle-node-of-a-linked-list) |
+| 2154 | Keep Multiplying Found Values By Two | Java | [View](./problems/2154-keep-multiplying-found-values-by-two) |
