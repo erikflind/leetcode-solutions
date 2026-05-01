@@ -1,6 +1,4 @@
 # leetcode-solutions
-Collection of my solutions to various leetcode problems.
-
 <!--TODO (maybe):  add statistics section with # of problems solved, which difficulty, etc.-->
 
 ## Contents
