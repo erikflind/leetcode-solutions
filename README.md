@@ -1,9 +1,10 @@
-# leetcode-solutions
-Collection of my solutions to various leetcode problems.
-
 <!--TODO (maybe):  add statistics section with # of problems solved, which difficulty, etc.-->
 
-## Contents
+# Contents
+## Scripts
+Python scripts + templates for README and source file generation [here](./scripts/#usage). 
+
+## Problems
 | # | Problem Title | Language(s) | Link |
 |:-:|---------------|-------------|------|
 | 0001 | Two Sum | Java | [View](./problems/0001-two-sum) |
