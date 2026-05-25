@@ -9,7 +9,9 @@ Python scripts + templates for README and source file generation [here](./script
 |:-:|---------------|-------------|------|
 | 0001 | Two Sum | Java | [View](./problems/0001-two-sum) |
 | 0002 | Add Two Numbers | Java | [View](./problems/0002-add-two-numbers) |
+| 0009 | Palindrome Number | Java | [View](./problems/0009-palindrome-number) |
 | 0013 | Roman To Integer | Java | [View](./problems/0013-roman-to-integer) |
+| 0014 | Longest Common Prefix | Java | [View](./problems/0014-longest-common-prefix) |
 | 0020 | Valid Parentheses | Java | [View](./problems/0020-valid-parentheses) |
 | 0217 | Contains Duplicate | Java | [View](./problems/0217-contains-duplicate) |
 | 0383 | Ransom Note | C, Java | [View](./problems/0383-ransom-note) |
