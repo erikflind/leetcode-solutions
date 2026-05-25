@@ -1,11 +1,12 @@
 ### Main repository README templates ###
 
-MAIN_README_TEMPLATE = """# leetcode-solutions
-Collection of my solutions to various leetcode problems.
+MAIN_README_TEMPLATE = """<!--TODO (maybe):  add statistics section with # of problems solved, which difficulty, etc.-->
 
-<!--TODO (maybe):  add statistics section with # of problems solved, which difficulty, etc.-->
+# Contents
+## Scripts
+Python scripts + templates for README and source file generation [here](./scripts/#usage). 
 
-## Contents
+## Problems
 | # | Problem Title | Language(s) | Link |
 |:-:|---------------|-------------|------|"""
 
