@@ -21,6 +21,7 @@ Python scripts + templates for README and source file generation [here](./script
 | 1342 | Number Of Steps To Reduce A Number To Zero | C | [View](./problems/1342-number-of-steps-to-reduce-a-number-to-zero) |
 | 1480 | Running Sum Of 1D Array | Java | [View](./problems/1480-running-sum-of-1d-array) |
 | 1672 | Richest Customer Wealth | Java | [View](./problems/1672-richest-customer-wealth) |
+| 1752 | Check If Array Is Sorted And Rotated | Java | [View](./problems/1752-check-if-array-is-sorted-and-rotated) |
 | 2095 | Delete The Middle Node Of A Linked List | Java | [View](./problems/2095-delete-the-middle-node-of-a-linked-list) |
 | 2154 | Keep Multiplying Found Values By Two | Java | [View](./problems/2154-keep-multiplying-found-values-by-two) |
 | 3190 | Find Minimum Operations To Make All Elements Divisible By Three | C | [View](./problems/3190-find-minimum-operations-to-make-all-elements-divisible-by-three) |
