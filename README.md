@@ -30,3 +30,4 @@ Python scripts + templates for README and source file generation [here](./script
 | 3190 | Find Minimum Operations To Make All Elements Divisible By Three | C | [View](./problems/3190-find-minimum-operations-to-make-all-elements-divisible-by-three) |
 | 3633 | Earliest Finish Time For Land And Water Rides I | Java | [View](./problems/3633-earliest-finish-time-for-land-and-water-rides-i) |
 | 3635 | Earliest Finish Time For Land And Water Rides Ii | Java | [View](./problems/3635-earliest-finish-time-for-land-and-water-rides-ii) |
+| 3683 | Earliest Time To Finish One Task | Java | [View](./problems/3683-earliest-time-to-finish-one-task) |
