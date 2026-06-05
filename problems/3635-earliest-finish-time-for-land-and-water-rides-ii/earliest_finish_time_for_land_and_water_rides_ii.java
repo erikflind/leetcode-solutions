@@ -1,4 +1,4 @@
-// Problem:  3635. Earliest Finish Time For Land And Water Rides Ii
+// Problem:  3635. Earliest Finish Time For Land And Water Rides II
 // Solution:  Greedy scan multiple passes ~ O(n + m)  [n == landStartTime.length, m == waterStartTime.length]
 // Link:  https://leetcode.com/problems/earliest-finish-time-for-land-and-water-rides-ii/
 
