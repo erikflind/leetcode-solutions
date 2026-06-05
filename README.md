@@ -28,3 +28,5 @@ Python scripts + templates for README and source file generation [here](./script
 | 2095 | Delete The Middle Node Of A Linked List | Java | [View](./problems/2095-delete-the-middle-node-of-a-linked-list) |
 | 2154 | Keep Multiplying Found Values By Two | Java | [View](./problems/2154-keep-multiplying-found-values-by-two) |
 | 3190 | Find Minimum Operations To Make All Elements Divisible By Three | C | [View](./problems/3190-find-minimum-operations-to-make-all-elements-divisible-by-three) |
+| 3633 | Earliest Finish Time For Land And Water Rides I | Java | [View](./problems/3633-earliest-finish-time-for-land-and-water-rides-i) |
+| 3635 | Earliest Finish Time For Land And Water Rides Ii | Java | [View](./problems/3635-earliest-finish-time-for-land-and-water-rides-ii) |
